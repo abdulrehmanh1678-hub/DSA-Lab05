@@ -1,42 +1,59 @@
+
 #include <iostream>
 using namespace std;
 
-struct node { 
-    int data;
-    node* next;
-    node* prev;
-     };
+class DoublyList {
+    struct node {
+        int data;
+        node *next, *prev;
+        node(int v) : data(v), next(nullptr), prev(nullptr) {}
+    };
+    node *head = nullptr, *tail = nullptr;
 
-node *head = nullptr, *tail = nullptr;
+public:
+    void AddNode(int v) {
+        node *n = new node(v);
+        if (!head) head = tail = n;
+        else {
+            tail->next = n;
+            n->prev = tail;
+            tail = n;
+        }
+    }
 
-void AddNode(int v) {
-    node* n = new node{v, nullptr, tail};
-    if (tail) tail->next = n; else head = n;
-    tail = n;
-}
+    void PrintForward() {
+        if (!head) { cout << "Empty list\n"; return; }
+        for (node *p = head; p; p = p->next)
+            cout << p->data << " ";
+        cout << endl;
+    }
 
-void PrintForward() {
-    if (!head) { cout << "List is empty\n"; return; }
-    for (node* p = head; p; p = p->next) cout << p->data << " ";
-    cout << "\n";
-}
+    void PrintReverse() {
+        if (!tail) { cout << "Empty list\n"; return; }
+        for (node *p = tail; p; p = p->prev)
+            cout << p->data << " ";
+        cout << endl;
+    }
 
-void PrintReverse() {
-    if (!tail) { cout << "List is empty\n"; return; }
-    for (node* p = tail; p; p = p->prev) cout << p->data << " ";
-    cout << "\n";
-}
-
-void ClearList() {
-    while (head) { node* t = head; head = head->next; delete t; }
-    tail = nullptr;
-}
+    void ClearList() {
+        while (head) {
+            node *p = head;
+            head = head->next;
+            delete p;
+        }
+        tail = nullptr;
+    }
+};
 
 int main() {
-    int n, v;
-    cout << "Count: "; cin >> n;
-    for (int i = 0; i < n; i++) { cin >> v; AddNode(v); }
-    PrintForward();
-    PrintReverse();
-    ClearList();
+    DoublyList l;
+    int n, x;
+    cin >> n;
+    for (int i = 0; i < n; i++) {
+        cin >> x;
+        l.AddNode(x);
+    }
+    l.PrintForward();
+    l.PrintReverse();
+    l.ClearList();
 }
